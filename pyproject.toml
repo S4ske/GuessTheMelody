@@ -1,0 +1,41 @@
+[project]
+name = "guessthemelody"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "channels[daphne]>=4.2.2",
+    "django>=5.1.7",
+    "djangorestframework>=3.16.0",
+    "psycopg>=3.2.6",
+    "python-dotenv>=1.1.0",
+    "yandex-music>=2.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.0",
+]
+
+[tool.ruff]
+line-length = 119
+output-format = "grouped"
+show-fixes = true
+target-version = "py37"
+exclude = [".svn", "CVS", ".bzr", ".hg",".git", "__pycache__", ".tox", ".eggs", "*.egg", ".venv", "env", "venv", "build"]
+
+[tool.ruff.lint]
+select = ["W", "E", "F", "DJ", "I", "N", "T20", "Q"]
+ignore = ["Q000", "Q003", "W191"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.ruff.lint.mccabe]
+max-complexity = 6
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
