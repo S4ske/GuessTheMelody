@@ -1,93 +1,89 @@
 from datetime import datetime, timedelta
 
-from category_abc import CategoryABC
-from game_state_abc import GameStateABC
-from game_states import MelodyPickState
-from melody_abc import MelodyABC
-from player_abc import PlayerABC
+from .categories_provider_abc import CategoriesProviderABC
+from .dto import Melody as MelodyDTO, Player as PlayerDTO
+from .game_state_abc import GameStateABC
+from .players_provider_abc import PlayersProviderABC
+from .state_info_provider_abc import StateInfoProviderABC
 
 
 class GuessTheMelodyGame:
-    def __init__(self, players: list[PlayerABC], categories: list[CategoryABC], state: GameStateABC | None = None,
-                 listening_time: timedelta = timedelta(milliseconds=30 * 1000)):
-        self._players = players
-        self._categories = categories
-        self._state = state if state else MelodyPickState(self, self._players[0])
-        self.listening_time = listening_time
+	def __init__(
+		self,
+		players_provider: PlayersProviderABC,
+		categories_provider: CategoriesProviderABC,
+		state_info_provider: StateInfoProviderABC,
+		state: GameStateABC | None = None,
+		listening_time: timedelta = timedelta(milliseconds=30 * 1000),
+	):
+		self._players_provider = players_provider
+		self._categories_provider = categories_provider
+		self._state_info_provider = state_info_provider
+		self._state = state
+		self._listening_time = listening_time
 
-    @property
-    def choosing_player(self) -> PlayerABC:
-        return self._state.choosing_player
+	@property
+	def listening_time(self):
+		return self._listening_time
 
-    @property
-    def players(self):
-        return self._players
+	@property
+	def choosing_player(self) -> PlayerDTO:
+		return self._state.choosing_player
 
-    @property
-    def categories(self):
-        return self._categories
+	@property
+	def players(self) -> list[PlayerDTO]:
+		return self._players_provider.get_all_players()
 
-    @property
-    def end_time(self) -> datetime:
-        return self._state.end_time
+	@property
+	def end_time(self) -> datetime:
+		return self._state.end_time
 
-    @property
-    def already_answered_players(self) -> list[PlayerABC]:
-        return self._state.already_answered_players
+	@property
+	def start_time(self) -> datetime:
+		return self._state.start_time
 
-    def pick_melody(self, player: PlayerABC, melody: MelodyABC) -> None:
-        self._state.pick_melody(player, melody)
+	@property
+	def already_answered_players(self) -> list[PlayerDTO]:
+		return self._state.already_answered_players
 
-    @property
-    def current_melody(self) -> MelodyABC:
-        return self._state.current_melody
+	def pick_melody(self, nickname: str, category: str, points: int) -> None:
+		self._state.pick_melody(nickname, category, points)
 
-    def answer(self, player: PlayerABC, answer: str) -> None:
-        self._state.answer(player, answer)
+	@property
+	def current_melody(self) -> MelodyDTO:
+		return self._state.current_melody
 
-    def get_answer(self) -> str:
-        return self._state.get_answer()
+	def answer(self, nickname: str, answer: str) -> None:
+		self._state.answer(nickname, answer)
 
-    def accept_answer(self):
-        self._state.accept_answer()
+	def get_answer(self) -> str:
+		return self._state.get_answer()
 
-    def reject_answer(self):
-        self._state.reject_answer()
+	def accept_answer_partially(self) -> None:
+		self._state.accept_answer_partially()
 
-    def set_state(self, state: GameStateABC) -> None:
-        self._state = state
+	def accept_answer(self) -> None:
+		self._state.accept_answer()
 
-    def get_all_melodies(self) -> dict[CategoryABC, list[MelodyABC]]:
-        categories_to_melodies = dict()
+	def reject_answer(self) -> None:
+		self._state.reject_answer()
 
-        for category in self._categories:
-            categories_to_melodies[category] = category.get_all_melodies()
+	def set_state(self, state: GameStateABC) -> None:
+		self._state = state
 
-        return categories_to_melodies
+	def get_guessed_melodies(self):
+		return self._categories_provider.get_guessed_melodies()
 
-    def get_guessed_melodies(self) -> dict[CategoryABC, list[MelodyABC]]:
-        categories_to_melodies = dict()
+	def get_not_guessed_melodies(self):
+		return self._categories_provider.get_not_guessed_melodies()
 
-        for category in self._categories:
-            categories_to_melodies[category] = category.get_guessed_melodies()
+	def update_state(self) -> None:
+		self._state.update_state()
 
-        return categories_to_melodies
+	@property
+	def state(self) -> GameStateABC:
+		return self._state
 
-    def get_not_guessed_melodies(self) -> dict[CategoryABC, list[MelodyABC]]:
-        categories_to_melodies = dict()
-
-        for category in self._categories:
-            categories_to_melodies[category] = category.get_not_guessed_melodies()
-
-        return categories_to_melodies
-
-    def update_state(self) -> None:
-        self._state.update_state()
-
-    @property
-    def state(self) -> GameStateABC:
-        return self._state
-
-    @property
-    def not_guessed_melodies_count(self) -> int:
-        return sum(map(lambda category: category.not_guessed_melodies_count, self._categories))
+	@property
+	def not_guessed_melodies_count(self) -> int:
+		return self._categories_provider.get_not_guessed_melodies_count()

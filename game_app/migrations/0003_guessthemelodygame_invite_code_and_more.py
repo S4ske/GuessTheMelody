@@ -5,24 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		('game_app', '0002_alter_gamestate_last_action'),
+	]
 
-    dependencies = [
-        ("game_app", "0002_alter_gamestate_last_action"),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name="guessthemelodygame",
-            name="invite_code",
-            field=models.CharField(default=123456, max_length=6, unique=True),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name="gamestate",
-            name="last_action",
-            field=models.DateTimeField(
-                db_default=datetime.datetime(2025, 4, 8, 13, 55, 38, 549933),
-                default=datetime.datetime(2025, 4, 8, 13, 55, 38, 549933),
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name='guessthemelodygame',
+			name='invite_code',
+			field=models.CharField(default=123456, max_length=6, unique=True),
+			preserve_default=False,
+		),
+		migrations.AlterField(
+			model_name='gamestate',
+			name='last_action',
+			field=models.DateTimeField(
+				db_default=datetime.datetime(2025, 4, 8, 13, 55, 38, 549933),
+				default=datetime.datetime(2025, 4, 8, 13, 55, 38, 549933),
+			),
+		),
+	]

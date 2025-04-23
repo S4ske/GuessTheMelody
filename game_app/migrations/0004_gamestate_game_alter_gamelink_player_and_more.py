@@ -6,38 +6,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		('game_app', '0003_guessthemelodygame_invite_code_and_more'),
+	]
 
-    dependencies = [
-        ("game_app", "0003_guessthemelodygame_invite_code_and_more"),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name="gamestate",
-            name="game",
-            field=models.ForeignKey(
-                default=None,
-                on_delete=django.db.models.deletion.CASCADE,
-                to="game_app.guessthemelodygame",
-                unique=True,
-            ),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name="gamelink",
-            name="player",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                to="game_app.player",
-                unique=True,
-            ),
-        ),
-        migrations.AlterField(
-            model_name="gamestate",
-            name="last_action",
-            field=models.DateTimeField(
-                db_default=datetime.datetime(2025, 4, 8, 14, 49, 51, 826236),
-                default=datetime.datetime(2025, 4, 8, 14, 49, 51, 826236),
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name='gamestate',
+			name='game',
+			field=models.ForeignKey(
+				default=None,
+				on_delete=django.db.models.deletion.CASCADE,
+				to='game_app.guessthemelodygame',
+				unique=True,
+			),
+			preserve_default=False,
+		),
+		migrations.AlterField(
+			model_name='gamelink',
+			name='player',
+			field=models.ForeignKey(
+				on_delete=django.db.models.deletion.CASCADE,
+				to='game_app.player',
+				unique=True,
+			),
+		),
+		migrations.AlterField(
+			model_name='gamestate',
+			name='last_action',
+			field=models.DateTimeField(
+				db_default=datetime.datetime(2025, 4, 8, 14, 49, 51, 826236),
+				default=datetime.datetime(2025, 4, 8, 14, 49, 51, 826236),
+			),
+		),
+	]

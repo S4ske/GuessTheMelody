@@ -5,32 +5,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		('game_app', '0004_gamestate_game_alter_gamelink_player_and_more'),
+	]
 
-    dependencies = [
-        ("game_app", "0004_gamestate_game_alter_gamelink_player_and_more"),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name="gamestate",
-            name="last_action",
-            field=models.DateTimeField(
-                db_default=datetime.datetime(2025, 4, 8, 15, 38, 22, 397522),
-                default=datetime.datetime(2025, 4, 8, 15, 38, 22, 397522),
-            ),
-        ),
-        migrations.AlterField(
-            model_name="gamestate",
-            name="state",
-            field=models.CharField(
-                choices=[
-                    ("created", "Created"),
-                    ("choosing", "Choosing"),
-                    ("listening", "Listening"),
-                    ("answering", "Answering"),
-                    ("finished", "Finished"),
-                ],
-                max_length=255,
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name='gamestate',
+			name='last_action',
+			field=models.DateTimeField(
+				db_default=datetime.datetime(2025, 4, 8, 15, 38, 22, 397522),
+				default=datetime.datetime(2025, 4, 8, 15, 38, 22, 397522),
+			),
+		),
+		migrations.AlterField(
+			model_name='gamestate',
+			name='state',
+			field=models.CharField(
+				choices=[
+					('created', 'Created'),
+					('choosing', 'Choosing'),
+					('listening', 'Listening'),
+					('answering', 'Answering'),
+					('finished', 'Finished'),
+				],
+				max_length=255,
+			),
+		),
+	]

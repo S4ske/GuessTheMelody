@@ -1,10 +1,14 @@
 class StateError(Exception):
-    pass
+	pass
 
 
 class PlayerAlreadyAnsweredError(Exception):
-    pass
+	pass
 
 
 class WrongPlayerChoosingError(Exception):
-    pass
+	pass
+
+
+class AlreadyPickedError(Exception):
+	pass
