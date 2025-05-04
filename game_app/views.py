@@ -5,6 +5,7 @@ from channels.layers import BaseChannelLayer, get_channel_layer
 from django.db import IntegrityError
 from django.http import FileResponse, HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import GameLink, GameState, GuessTheMelodyGame, Player
 from .utils import decode_jwt_token, generate_random_string, get_jwt_token
@@ -100,6 +101,7 @@ def delete_token(request: HttpRequest) -> HttpResponse:
 	return response
 
 
+@csrf_exempt
 def add_link(request: HttpRequest) -> HttpResponse:
 	link = request.body
 	if not link:
