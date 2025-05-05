@@ -245,7 +245,7 @@ class GameConsumer(JsonWebsocketConsumer):
 		async_to_sync(self.channel_layer.group_send)(
 			str(self.game_id),
 			{
-				'type': 'accept_answer',
+				'type': 'reject_answer',
 				'payload': {
 					'start_time': game.start_time.isoformat() if game.start_time else None,
 					'end_time': game.end_time.isoformat() if game.end_time else None,
