@@ -89,7 +89,7 @@ class MelodyListeningState(GameStateABC):
 		if self._time_is_out():
 			self._change_state_if_time_out()
 			return self._game.choosing_player
-		raise self._state_info_provider.choosing_player
+		return self._state_info_provider.choosing_player
 
 	def __init__(
 		self,
