@@ -45,6 +45,10 @@ class GuessTheMelodyGame:
 	@property
 	def already_answered_players(self) -> list[PlayerDTO]:
 		return self._state.already_answered_players
+	
+	@property
+	def answering_player(self) -> PlayerDTO:
+		return self._state.answering_player
 
 	def pick_melody(self, nickname: str, category: str, points: int) -> None:
 		self._state.pick_melody(nickname, category, points)

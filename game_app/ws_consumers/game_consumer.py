@@ -199,6 +199,7 @@ class GameConsumer(JsonWebsocketConsumer):
 	@wrap_errors
 	def handle_accept_answer_partially(self, content: dict):
 		game = get_game_from_db(self.game_id)
+		answering_player = game.answering_player
 		game.accept_answer_partially()
 		melody = game.current_melody
 
@@ -215,6 +216,7 @@ class GameConsumer(JsonWebsocketConsumer):
 					'points': melody.points,
 					'link': melody.file,
 					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)),
+					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
 				},
 			},
 		)
@@ -223,6 +225,7 @@ class GameConsumer(JsonWebsocketConsumer):
 	@wrap_errors
 	def handle_accept_answer(self, content: dict):
 		game = get_game_from_db(self.game_id)
+		answering_player = game.answering_player
 		game.accept_answer()
 
 		async_to_sync(self.channel_layer.group_send)(
@@ -231,6 +234,7 @@ class GameConsumer(JsonWebsocketConsumer):
 				'type': 'accept_answer',
 				'payload': {
 					'choosing_player': game.choosing_player.nickname,
+					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
 				},
 			},
 		)
@@ -239,6 +243,7 @@ class GameConsumer(JsonWebsocketConsumer):
 	@wrap_errors
 	def handle_reject_answer(self, content: dict):
 		game = get_game_from_db(self.game_id)
+		answering_player = game.answering_player
 		game.reject_answer()
 		melody = game.current_melody
 
@@ -255,6 +260,7 @@ class GameConsumer(JsonWebsocketConsumer):
 					'points': melody.points,
 					'link': melody.file,
 					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)),
+					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
 				},
 			},
 		)

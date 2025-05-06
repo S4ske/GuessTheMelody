@@ -12,6 +12,10 @@ if TYPE_CHECKING:
 
 class MelodyPickState(GameStateABC):
 	@property
+	def answering_player(self) -> PlayerDTO:
+		raise StateError()
+	
+	@property
 	def start_time(self) -> datetime:
 		raise StateError()
 
@@ -77,6 +81,13 @@ class MelodyPickState(GameStateABC):
 
 
 class MelodyListeningState(GameStateABC):
+	@property
+	def answering_player(self) -> PlayerDTO:
+		if self._time_is_out():
+			self._change_state_if_time_out()
+			return self._game.answering_player
+		return self._state_info_provider.answering_player
+	
 	@property
 	def start_time(self) -> datetime:
 		if self._time_is_out():
@@ -202,6 +213,10 @@ class MelodyListeningState(GameStateABC):
 
 class AnswerCheckState(GameStateABC):
 	@property
+	def answering_player(self) -> PlayerDTO:
+		return self._state_info_provider.answering_player
+	
+	@property
 	def start_time(self) -> datetime:
 		raise StateError()
 
@@ -294,6 +309,10 @@ class AnswerCheckState(GameStateABC):
 
 
 class IsFinishedState(GameStateABC):
+	@property
+	def answering_player(self) -> PlayerDTO:
+		raise StateError()
+	
 	@property
 	def start_time(self) -> datetime:
 		raise StateError()

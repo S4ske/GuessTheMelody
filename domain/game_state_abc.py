@@ -19,6 +19,11 @@ class GameStateABC(metaclass=ABCMeta):
 
 	@property
 	@abstractmethod
+	def answering_player(self) -> PlayerDTO:
+		raise StateError()
+
+	@property
+	@abstractmethod
 	def choosing_player(self) -> PlayerDTO:
 		raise StateError()
 
