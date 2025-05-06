@@ -90,7 +90,7 @@ class StateInfoProvider(StateInfoProviderABC):
 		game_state = self._get_game_state()
 		melody = Melody.objects.get(pk=game_state.current_melody_id)
 		return MelodyDTO(name=melody.name, points=melody.points, is_guessed=melody.is_guessed,
-						 category=CategoryDTO(name=melody.category.name), file=melody.pk)
+						 category=CategoryDTO(name=melody.category.name), file=melody.link)
 
 	@property
 	def choosing_player(self) -> PlayerDTO:
