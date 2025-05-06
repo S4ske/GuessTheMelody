@@ -11,7 +11,7 @@ class PlayersProvider(PlayersProviderABC):
 
     def get_all_players(self) -> list[PlayerDTO]:
         return [PlayerDTO(nickname=player.nickname, points=player.points, is_master=player.is_master)
-                for player in Player.objects.get(game__pk=self._game_id)]
+                for player in Player.objects.filter(game__pk=self._game_id).all()]
 
     @property
     def players_count(self) -> int:
