@@ -37,6 +37,8 @@ def create_game(request: HttpRequest, nickname: str) -> HttpResponse:
 			},
 		),
 		httponly=True,
+		samesite='None',
+		secure=True,
 	)
 
 	return response
@@ -62,6 +64,8 @@ def get_token(request: HttpRequest) -> HttpResponse:
 			},
 		),
 		httponly=True,
+		samesite='None',
+		secure=True,
 	)
 	player = Player(game=game, nickname=nickname)
 
