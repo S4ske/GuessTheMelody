@@ -29,7 +29,12 @@ SECRET_KEY = getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['guessthemelody.ru/']
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 CHANNEL_LAYERS = {
 	"default": {
@@ -62,13 +67,6 @@ MIDDLEWARE = [
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = False
-
 
 ROOT_URLCONF = 'guessthemelody.urls'
 
