@@ -29,7 +29,19 @@ SECRET_KEY = getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(getenv('DEBUG')))
 
-ALLOWED_HOSTS = ['guessthemelody.ru/']
+# ALLOWED_HOSTS = [
+# 	'api.guessthemelody.ru',
+# 	'www.guessthemelody.ru',
+# 	'guessthemelody.ru',
+# 	'127.0.0.1',
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
