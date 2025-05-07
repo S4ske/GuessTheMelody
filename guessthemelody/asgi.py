@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 
 import os
 
+import django
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-from game_app.routing import ws_urlpatterns
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'guessthemelody.settings')
+django.setup()
+
+from game_app.routing import ws_urlpatterns
 
 application = ProtocolTypeRouter(
 	{
