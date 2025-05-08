@@ -1,5 +1,6 @@
 import re
 import threading
+import time
 from typing import Callable
 
 from asgiref.sync import async_to_sync
@@ -45,6 +46,7 @@ class GameConsumer(JsonWebsocketConsumer):
 	player_id: int
 	nickname: str
 	game_id: int
+	heartbeat_thread: threading.Thread
 	
 	def send_exception(self, message: str) -> None:
 		self.send_json({
@@ -137,11 +139,28 @@ class GameConsumer(JsonWebsocketConsumer):
 
 		async_to_sync(self.channel_layer.group_add)(str(self.game_id), self.channel_name)
 		self.accept()
+		self.heartbeat_thread = threading.Thread(
+			target=self._websocket_heartbeat,
+			daemon=True
+		)
+		self.heartbeat_thread.start()
 		self.send_json(response)
+	
+	def _websocket_heartbeat(self) -> None:
+		while True:
+			self.send({
+				"type": "heartbeat",
+				"text": {
+					"message": "ping"
+				},
+			})
+			time.sleep(25)
 
 	def disconnect(self, code):
 		if hasattr(self, 'game_id'):
 			async_to_sync(self.channel_layer.group_discard)(str(self.game_id), self.channel_name)
+		if hasattr(self, 'heartbeat_thread'):
+			self.heartbeat_thread.join(timeout=0.1)
 		self.close()
 
 	@wrap_errors
