@@ -150,7 +150,7 @@ class GameConsumer(JsonWebsocketConsumer):
 		while True:
 			self.send_json({
 				"type": "heartbeat",
-				"text": {
+				"payload": {
 					"message": "ping"
 				},
 			})
