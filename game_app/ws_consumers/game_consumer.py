@@ -56,20 +56,16 @@ class GameConsumer(JsonWebsocketConsumer):
 
 	def connect(self) -> None:
 		headers = self.scope["headers"]
-		print(headers)
 		cookies = list(filter(lambda x: x[0] == b'cookie', headers))
-		print('123123123123123' + cookies[0][1].decode())
 		if not cookies:
 			self.close()
 			return
 
 		token_match = re.match(r'.*game_token=([^;]+).*', cookies[0][1].decode())
-		print('123123123123123' + token_match.group(1))
 		if not token_match:
 			self.close()
 			return
 		token = decode_jwt_token(token_match.group(1))
-		print(token)
 		game_id = int(token.get('game_id'))
 		if not game_id:
 			self.close()
@@ -94,7 +90,6 @@ class GameConsumer(JsonWebsocketConsumer):
 
 		game_state = game.state
 		players = game.players.prefetch_related('link').all()
-		print(players)
 
 		response = {
 			'type': 'init',
