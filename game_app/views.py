@@ -35,9 +35,8 @@ def create_game(request: HttpRequest, nickname: str) -> HttpResponse:
 				'nickname': nickname,
 				'game_id': str(game.pk),
 			},
-		),  # TODO: поменять samesite
+		),
 		httponly=True,
-		samesite='None',
 		secure=True,
 	)
 
@@ -62,9 +61,8 @@ def get_token(request: HttpRequest) -> HttpResponse:
 				'nickname': nickname,
 				'game_id': str(game.pk),
 			},
-		),  # TODO: поменять samesite
+		),
 		httponly=True,
-		samesite='None',
 		secure=True,
 	)
 	player = Player(game=game, nickname=nickname)
