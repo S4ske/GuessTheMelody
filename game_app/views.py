@@ -38,6 +38,7 @@ def create_game(request: HttpRequest, nickname: str) -> HttpResponse:
 		),
 		httponly=True,
 		secure=True,
+		max_age=28800,
 	)
 
 	return response
@@ -64,6 +65,7 @@ def get_token(request: HttpRequest) -> HttpResponse:
 		),
 		httponly=True,
 		secure=True,
+		max_age=28800,
 	)
 	player = Player(game=game, nickname=nickname)
 
