@@ -30,15 +30,15 @@ SECRET_KEY = getenv('SECRET_KEY')
 DEBUG = bool(int(getenv('DEBUG')))
 
 ALLOWED_HOSTS = [
-	'api.guessthemelody.ru',
-	'www.guessthemelody.ru',
-	'guessthemelody.ru',
+	'https://api.guessthemelody.ru',
+	'https://www.guessthemelody.ru',
+	'https://guessthemelody.ru',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-	'api.guessthemelody.ru',
-	'www.guessthemelody.ru',
-	'guessthemelody.ru',
+	'https://api.guessthemelody.ru',
+	'https://www.guessthemelody.ru',
+	'https://guessthemelody.ru',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
