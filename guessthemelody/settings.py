@@ -30,9 +30,9 @@ SECRET_KEY = getenv('SECRET_KEY')
 DEBUG = bool(int(getenv('DEBUG')))
 
 ALLOWED_HOSTS = [
-	'https://api.guessthemelody.ru',
-	'https://www.guessthemelody.ru',
-	'https://guessthemelody.ru',
+	'api.guessthemelody.ru',
+	'www.guessthemelody.ru',
+	'guessthemelody.ru',
 ]
 
 CORS_ALLOWED_ORIGINS = [
