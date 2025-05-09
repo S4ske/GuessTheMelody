@@ -11,28 +11,8 @@ if TYPE_CHECKING:
 
 
 class MelodyPickState(GameStateABC):
-	@property
-	def answering_player(self) -> PlayerDTO:
-		raise StateError()
-	
-	@property
-	def start_time(self) -> datetime:
-		raise StateError()
-
-	@property
-	def end_time(self) -> datetime:
-		raise StateError()
-
 	def update_state(self) -> None:
 		return
-
-	@property
-	def already_answered_players(self) -> list[PlayerDTO]:
-		raise StateError()
-
-	@property
-	def current_melody(self) -> MelodyDTO:
-		raise StateError()
 
 	def answer(self, player_nickname: str, answer: str) -> None:
 		raise StateError()
@@ -215,20 +195,8 @@ class AnswerCheckState(GameStateABC):
 	@property
 	def answering_player(self) -> PlayerDTO:
 		return self._state_info_provider.answering_player
-	
-	@property
-	def start_time(self) -> datetime:
-		raise StateError()
 
 	def pick_melody(self, nickname: str, category: str, points: int) -> None:
-		raise StateError()
-
-	@property
-	def choosing_player(self) -> PlayerDTO:
-		raise StateError()
-
-	@property
-	def end_time(self) -> datetime:
 		raise StateError()
 
 	def update_state(self) -> None:
@@ -261,8 +229,6 @@ class AnswerCheckState(GameStateABC):
 		self._players_provider.add_points(
 			self._state_info_provider.answering_player.nickname, self._state_info_provider.current_melody.points // 2
 		)
-		melody = self._state_info_provider.current_melody
-		start_time = datetime.now(timezone.utc)
 
 		if len(self._state_info_provider.answered_players) >= self._players_provider.players_count:
 			self._state_info_provider.set_new_state(
@@ -270,6 +236,10 @@ class AnswerCheckState(GameStateABC):
 				choosing_player_nickname=self._state_info_provider.choosing_player.nickname,
 			)
 			self._game.set_state(MelodyPickState(self._game))
+			return
+
+		melody = self._state_info_provider.current_melody
+		start_time = datetime.now(timezone.utc)
 
 		self._state_info_provider.set_new_state(
 			GameStates.LISTENING.value,
@@ -316,14 +286,6 @@ class AnswerCheckState(GameStateABC):
 
 
 class IsFinishedState(GameStateABC):
-	@property
-	def answering_player(self) -> PlayerDTO:
-		raise StateError()
-	
-	@property
-	def start_time(self) -> datetime:
-		raise StateError()
-
 	def __init__(self, game: 'GuessTheMelodyGame'):
 		super().__init__(game)
 		self._players_provider = game._players_provider
@@ -333,24 +295,8 @@ class IsFinishedState(GameStateABC):
 	def pick_melody(self, nickname: str, category: str, points: int) -> None:
 		raise StateError()
 
-	@property
-	def choosing_player(self) -> PlayerDTO:
-		raise StateError()
-
-	@property
-	def end_time(self) -> datetime:
-		raise StateError()
-
 	def update_state(self) -> None:
 		return
-
-	@property
-	def already_answered_players(self) -> list[PlayerDTO]:
-		raise StateError()
-
-	@property
-	def current_melody(self) -> MelodyDTO:
-		raise StateError()
 
 	def answer(self, player_nickname: str, answer: str) -> None:
 		raise StateError()

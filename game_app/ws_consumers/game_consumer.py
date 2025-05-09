@@ -224,13 +224,13 @@ class GameConsumer(JsonWebsocketConsumer):
 				'payload': {
 					'start_time': game.start_time.isoformat() if game.start_time else None,
 					'end_time': game.end_time.isoformat() if game.end_time else None,
-					'choosing_player': game.choosing_player.nickname,
-					'melody_name': melody.name,
-					'category_name': melody.category.name,
-					'points': melody.points,
-					'link': melody.file,
-					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)),
-					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
+					'choosing_player': game.choosing_player.nickname if game.choosing_player else None,
+					'melody_name': melody.name if melody else None,
+					'category_name': melody.category.name if melody else None,
+					'points': melody.points if melody else None,
+					'link': melody.file if melody else None,
+					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)) if game.already_answered_players else None,
+					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points if game.players else None
 				},
 			},
 		)
@@ -268,13 +268,13 @@ class GameConsumer(JsonWebsocketConsumer):
 				'payload': {
 					'start_time': game.start_time.isoformat() if game.start_time else None,
 					'end_time': game.end_time.isoformat() if game.end_time else None,
-					'choosing_player': game.choosing_player.nickname,
-					'melody_name': melody.name,
-					'category_name': melody.category.name,
-					'points': melody.points,
-					'link': melody.file,
-					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)),
-					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
+					'choosing_player': game.choosing_player.nickname if game.choosing_player else None,
+					'melody_name': melody.name if melody else None,
+					'category_name': melody.category.name if melody else None,
+					'points': melody.points if melody else None,
+					'link': melody.file if melody else None,
+					'answered_players_nicknames': list(map(lambda x: x.nickname, game.already_answered_players)) if game.already_answered_players else None,
+					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points if game.players else None
 				},
 			},
 		)

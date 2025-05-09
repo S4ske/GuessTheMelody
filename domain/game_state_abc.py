@@ -18,38 +18,32 @@ class GameStateABC(metaclass=ABCMeta):
 		raise StateError()
 
 	@property
-	@abstractmethod
-	def answering_player(self) -> PlayerDTO:
-		raise StateError()
+	def answering_player(self) -> PlayerDTO | None:
+		return
 
 	@property
-	@abstractmethod
-	def choosing_player(self) -> PlayerDTO:
-		raise StateError()
+	def choosing_player(self) -> PlayerDTO | None:
+		return
 
 	@property
-	@abstractmethod
-	def start_time(self) -> datetime:
-		pass
+	def start_time(self) -> datetime | None:
+		return
 
 	@property
-	@abstractmethod
-	def end_time(self) -> datetime:
-		raise StateError()
+	def end_time(self) -> datetime | None:
+		return
 
 	@abstractmethod
 	def update_state(self) -> None:
 		return
 
 	@property
-	@abstractmethod
-	def already_answered_players(self) -> list[PlayerDTO]:
-		raise StateError()
+	def already_answered_players(self) -> list[PlayerDTO] | None:
+		return
 
 	@property
-	@abstractmethod
-	def current_melody(self) -> MelodyDTO:
-		raise StateError()
+	def current_melody(self) -> MelodyDTO | None:
+		return
 
 	@abstractmethod
 	def answer(self, player_nickname: str, answer: str) -> None:

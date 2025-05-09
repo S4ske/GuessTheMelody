@@ -43,7 +43,7 @@ class StateInfoProvider(StateInfoProviderABC):
 		game_state = GameState(
 			game=game,
 			state=state,
-			time_left=time_left.microseconds // 1000 if time_left else None,
+			time_left=time_left.seconds * 1000 + (time_left.microseconds // 1000) if time_left else None,
 			end_time=end_time,
 			start_time=start_time,
 			current_melody_id=current_melody_id,
