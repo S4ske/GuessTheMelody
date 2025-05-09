@@ -264,6 +264,13 @@ class AnswerCheckState(GameStateABC):
 		melody = self._state_info_provider.current_melody
 		start_time = datetime.now(timezone.utc)
 
+		if len(self._state_info_provider.answered_players) >= self._players_provider.players_count:
+			self._state_info_provider.set_new_state(
+				GameStates.CHOOSING.value,
+				choosing_player_nickname=self._state_info_provider.choosing_player.nickname,
+			)
+			self._game.set_state(MelodyPickState(self._game))
+
 		self._state_info_provider.set_new_state(
 			GameStates.LISTENING.value,
 			category_and_points=(melody.category.name, melody.points),
