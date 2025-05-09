@@ -93,19 +93,19 @@ def get_token(request: HttpRequest) -> HttpResponse:
 
 def delete_token(request: HttpRequest) -> HttpResponse:
 	token = request.COOKIES.get('game_token')
+	response = HttpResponse('success')
 	if not token:
-		return HttpResponseBadRequest('Пользователь не авторизован')
+		return response
+	response.delete_cookie('game_token')
 	token = decode_jwt_token(token)
 	nickname = token['nickname']
 	game_id = int(token['game_id'])
 	if not nickname or not game_id:
-		return HttpResponseBadRequest()
+		return response
 	game = get_object_or_404(GuessTheMelodyGame, pk=game_id)
 	player = game.players.get(nickname=nickname)
 	player.delete()
 	player.save()
-	response = HttpResponse()
-	response.delete_cookie('game_token')
 	return response
 
 
