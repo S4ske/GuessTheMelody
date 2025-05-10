@@ -8,7 +8,7 @@ from game_app.config import YANDEX_MUSIC_TOKEN
 
 yandex_client = Client(YANDEX_MUSIC_TOKEN).init()
 
-playlists_re = re.compile(r'.+/users/(?P<user_id>[^/]+)/playlists/(?P<playlist_id>\d+).*')
+playlists_re = re.compile(r'https://.+yandex.+/playlists/(?P<playlist_id>.+)(\?.+)?')
 default_genres = {'баста', 'король и шут', 'feduk', 'miyagi', 'элджей'}
 
 
