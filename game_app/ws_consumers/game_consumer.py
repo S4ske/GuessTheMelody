@@ -122,7 +122,7 @@ class GameConsumer(JsonWebsocketConsumer):
 				'categories': [
 					{
 						'category_name': category.name,
-						'melodies': [
+						'melodies': sorted([
 							{
 								'points': melody.points,
 								'name': melody.name,
@@ -130,7 +130,7 @@ class GameConsumer(JsonWebsocketConsumer):
 								'is_guessed': melody.is_guessed,
 							}
 							for melody in category.melodies.all()
-						],
+						], key=lambda x: x['points']),
 					}
 					for category in game.categories.prefetch_related('melodies').all()
 				],
@@ -387,7 +387,7 @@ class GameConsumer(JsonWebsocketConsumer):
 					'categories': [
 						{
 							'category_name': category.name,
-							'melodies': [
+							'melodies': sorted([
 								{
 									'points': melody.points,
 									'name': melody.name,
@@ -395,7 +395,7 @@ class GameConsumer(JsonWebsocketConsumer):
 									'is_guessed': melody.is_guessed,
 								}
 								for melody in category.melodies.all()
-							],
+							], key=lambda x: x['points']),
 						}
 						for category in game.categories.all()
 					],
