@@ -171,10 +171,7 @@ class MelodyListeningState(GameStateABC):
 			raise StateError()
 
 	def reject_answer(self) -> None:
-		if (
-			self._time_is_out()
-			or len(self._state_info_provider.answered_players) >= self._players_provider.players_count
-		):
+		if (self._time_is_out()):
 			self._change_state_if_time_out()
 			self._game.reject_answer()
 		else:
@@ -256,14 +253,20 @@ class AnswerCheckState(GameStateABC):
 		self._players_provider.add_points(player.nickname, self._state_info_provider.current_melody.points)
 		self._state_info_provider.set_new_state(
 			GameStates.CHOOSING.value,
-			choosing_player_nickname=player.nickname,
+			choosing_player_nickname=self._state_info_provider.choosing_player.nickname,
 		)
 		self._game.set_state(MelodyPickState(self._game))
 
 	def reject_answer(self) -> None:
 		melody = self._state_info_provider.current_melody
-		start_time = datetime.now(timezone.utc)
 		self._players_provider.remove_points(self._state_info_provider.answering_player.nickname, melody.points)
+		if len(self._state_info_provider.answered_players) >= self._players_provider.players_count:
+			self._state_info_provider.set_new_state(
+				GameStates.CHOOSING.value,
+				choosing_player_nickname=player.nickname,
+			)
+			self._game.set_state(MelodyPickState(self._game))
+		start_time = datetime.now(timezone.utc)
 		self._state_info_provider.set_new_state(
 			GameStates.LISTENING.value,
 			category_and_points=(melody.category.name, melody.points),
