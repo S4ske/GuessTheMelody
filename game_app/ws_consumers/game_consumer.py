@@ -7,17 +7,24 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from yandex_music import Track
 
-from domain import AlreadyPickedError, PlayerAlreadyAnsweredError, StateError, WrongPlayerChoosingError
+from domain import (
+	AlreadyPickedError,
+	GuessTheMelodyGame as GuessTheMelodyGameDomain,
+	IsFinishedState,
+	PlayerAlreadyAnsweredError,
+	StateError,
+	WrongPlayerChoosingError,
+)
 
 from ..models import Category, GameState, GuessTheMelodyGame, Melody, Player
 from ..utils import GameIsNotStartedError, decode_jwt_token, get_game_from_db
 from ..yandex_client import mix_albums
 
 
-def wrap_errors(func: Callable[['GameConsumer', ...], ...]):
-	def wrapper(self: 'GameConsumer', *args, **kwargs):
+def game_handle_wrapper(func: Callable[['GameConsumer', ...], GuessTheMelodyGameDomain]):
+	def wrapped_func(self: 'GameConsumer', *args, **kwargs):
 		try:
-			func(self, *args, **kwargs)
+			game = func(self, *args, **kwargs)
 		except GameIsNotStartedError:
 			self.send_exception('Game is not started')
 		except StateError:
@@ -28,8 +35,14 @@ def wrap_errors(func: Callable[['GameConsumer', ...], ...]):
 			self.send_exception('Some player has already answered')
 		except AlreadyPickedError:
 			self.send_exception('This song has been chosen before')
-
-	return wrapper
+		else:
+			if isinstance(game.state, IsFinishedState):
+				async_to_sync(self.channel_layer.group_send)(
+					str(self.game_id),
+					{ 'type': 'game_finished' }
+				)
+				
+	return wrapped_func
 
 
 def master_action(func: Callable[['GameConsumer', ...], ...]):
@@ -163,8 +176,8 @@ class GameConsumer(JsonWebsocketConsumer):
 			self.heartbeat_thread.join(timeout=0.1)
 		self.close()
 
-	@wrap_errors
-	def handle_pick_melody(self, content: dict):
+	@game_handle_wrapper
+	def handle_pick_melody(self, content: dict) -> GuessTheMelodyGameDomain:
 		game = get_game_from_db(self.game_id)
 		payload = content['payload']
 
@@ -186,9 +199,11 @@ class GameConsumer(JsonWebsocketConsumer):
 				},
 			},
 		)
+		
+		return game
 
-	@wrap_errors
-	def handle_answer(self, content: dict):
+	@game_handle_wrapper
+	def handle_answer(self, content: dict) -> GuessTheMelodyGameDomain:
 		game = get_game_from_db(self.game_id)
 		answer = content['payload']['answer']
 		game.answer(self.nickname, answer)
@@ -209,9 +224,11 @@ class GameConsumer(JsonWebsocketConsumer):
 			},
 		)
 
+		return game
+
 	@master_action
-	@wrap_errors
-	def handle_accept_answer_partially(self, content: dict):
+	@game_handle_wrapper
+	def handle_accept_answer_partially(self, content: dict) -> GuessTheMelodyGameDomain:
 		game = get_game_from_db(self.game_id)
 		answering_player = game.answering_player
 		game.accept_answer_partially()
@@ -235,9 +252,11 @@ class GameConsumer(JsonWebsocketConsumer):
 			},
 		)
 
+		return game
+
 	@master_action
-	@wrap_errors
-	def handle_accept_answer(self, content: dict):
+	@game_handle_wrapper
+	def handle_accept_answer(self, content: dict) -> GuessTheMelodyGameDomain:
 		game = get_game_from_db(self.game_id)
 		answering_player = game.answering_player
 		game.accept_answer()
@@ -253,9 +272,11 @@ class GameConsumer(JsonWebsocketConsumer):
 			},
 		)
 
+		return game
+
 	@master_action
-	@wrap_errors
-	def handle_reject_answer(self, content: dict):
+	@game_handle_wrapper
+	def handle_reject_answer(self, content: dict) -> GuessTheMelodyGameDomain:
 		game = get_game_from_db(self.game_id)
 		answering_player = game.answering_player
 		game.reject_answer()
@@ -278,6 +299,8 @@ class GameConsumer(JsonWebsocketConsumer):
 				},
 			},
 		)
+
+		return game
 
 	@master_action
 	def handle_transfer_master(self, content: dict):
