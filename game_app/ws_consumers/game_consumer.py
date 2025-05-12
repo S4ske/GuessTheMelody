@@ -266,7 +266,7 @@ class GameConsumer(JsonWebsocketConsumer):
 			{
 				'type': 'accept_answer',
 				'payload': {
-					'choosing_player': game.choosing_player.nickname,
+					'choosing_player': game.choosing_player.nickname if game.choosing_player else None,
 					'new_points': list(filter(lambda x: x.nickname == answering_player.nickname, game.players))[0].points
 				},
 			},
@@ -448,6 +448,9 @@ class GameConsumer(JsonWebsocketConsumer):
 		self.send_json(content)
 		
 	def reject_answer(self, content):
+		self.send_json(content)
+	
+	def game_finished(self, content):
 		self.send_json(content)
 
 	def receive_json(self, content, **kwargs):
