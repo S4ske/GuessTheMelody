@@ -171,7 +171,7 @@ class MelodyListeningState(GameStateABC):
 			raise StateError()
 
 	def reject_answer(self) -> None:
-		if (self._time_is_out()):
+		if self._time_is_out():
 			self._change_state_if_time_out()
 			self._game.reject_answer()
 		else:

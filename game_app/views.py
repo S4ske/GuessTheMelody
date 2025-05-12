@@ -82,7 +82,7 @@ def get_token(request: HttpRequest) -> HttpResponse:
 				'nickname': nickname,
 				'points': player.points,
 				'is_master': player.is_master,
-				'game_id': str(game.pk),
+				'id': player.pk,
 			},
 		},
 	)
