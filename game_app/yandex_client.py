@@ -8,7 +8,7 @@ from game_app.config import YANDEX_MUSIC_TOKEN
 
 yandex_client = Client(YANDEX_MUSIC_TOKEN).init()
 
-playlists_re = re.compile(r'https://.+yandex.+/playlists/(?P<playlist_id>.+)(\?.+)?')
+playlists_re = re.compile(r'https://.+yandex.+?/users/(?P<username>.+)/playlists/(?P<playlist_id>[^?]+)(\?.+)?')
 default_genres = {'баста', 'король и шут', 'feduk', 'miyagi', 'элджей'}
 
 
@@ -20,7 +20,7 @@ def get_playlist(link, playlists, lock, playlists_re):
 	match_obj = playlists_re.match(link)
 	if not match_obj:
 		return
-	playlist = yandex_client.users_playlists(match_obj.group('playlist_id'), match_obj.group('user_id'))
+	playlist = yandex_client.users_playlists(match_obj.group('playlist_id'), match_obj.group('username'))
 	with lock:
 		playlists.append(playlist)
 
