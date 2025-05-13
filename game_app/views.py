@@ -68,6 +68,7 @@ def get_token(request: HttpRequest) -> HttpResponse:
 	player = Player(game=game, nickname=nickname)
 
 	channel_layer: BaseChannelLayer = get_channel_layer()
+	player.save()
 	async_to_sync(channel_layer.group_send)(
 		str(game.pk),
 		{
@@ -80,8 +81,7 @@ def get_token(request: HttpRequest) -> HttpResponse:
 			},
 		},
 	)
-
-	player.save()
+	
 	return response
 
 
