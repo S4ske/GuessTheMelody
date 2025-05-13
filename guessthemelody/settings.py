@@ -27,25 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(getenv('DEBUG')))
+DEBUG = True
 
-ALLOWED_HOSTS = [
-	'api.guessthemelody.ru',
-	'www.guessthemelody.ru',
-	'guessthemelody.ru',
-]
+ALLOWED_HOSTS = ['*']
 
-CORS_ALLOWED_ORIGINS = [
-	'https://api.guessthemelody.ru',
-	'https://www.guessthemelody.ru',
-	'https://guessthemelody.ru',
-]
 CORS_ALLOW_CREDENTIALS = True
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 CHANNEL_LAYERS = {
 	"default": {

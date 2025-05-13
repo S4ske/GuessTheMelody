@@ -37,10 +37,7 @@ def create_game(request: HttpRequest, nickname: str) -> HttpResponse:
 			},
 		),
 		httponly=True,
-		secure=True,
 		max_age=28800,
-		domain='.guessthemelody.ru',
-		samesite='Lax',
 	)
 
 	return response
@@ -66,10 +63,7 @@ def get_token(request: HttpRequest) -> HttpResponse:
 			},
 		),
 		httponly=True,
-		secure=True,
 		max_age=28800,
-		domain='.guessthemelody.ru',
-		samesite='Lax',
 	)
 	player = Player(game=game, nickname=nickname)
 
