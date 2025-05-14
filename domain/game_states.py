@@ -224,7 +224,7 @@ class AnswerCheckState(GameStateABC):
 	def get_answer(self) -> str:
 		return self._state_info_provider.answer
 	
-	def _change_state_if_not_accept(self) -> None:
+	def _change_state_if_not_accept(self, choosing_player_nickname: str) -> None:
 		if self._categories_provider.get_not_guessed_melodies_count() <= 0:
 			self._state_info_provider.set_new_state(GameStates.FINISHED.value)
 			self._game.set_state(IsFinishedState(self._game))
@@ -233,7 +233,7 @@ class AnswerCheckState(GameStateABC):
 		if len(self._state_info_provider.answered_players) >= self._players_provider.players_count:
 			self._state_info_provider.set_new_state(
 				GameStates.CHOOSING.value,
-				choosing_player_nickname=self._state_info_provider.choosing_player.nickname,
+				choosing_player_nickname=choosing_player_nickname,
 			)
 			self._game.set_state(MelodyPickState(self._game))
 			return
@@ -244,7 +244,7 @@ class AnswerCheckState(GameStateABC):
 		self._state_info_provider.set_new_state(
 			GameStates.LISTENING.value,
 			category_and_points=(melody.category.name, melody.points),
-			choosing_player_nickname=self._state_info_provider.choosing_player.nickname,
+			choosing_player_nickname=choosing_player_nickname,
 			start_time=start_time,
 			end_time=start_time + self._state_info_provider.time_left,
 			answered_players_nicknames=list(map(lambda x: x.nickname, self._state_info_provider.answered_players)),
@@ -255,7 +255,7 @@ class AnswerCheckState(GameStateABC):
 		self._players_provider.add_points(
 			self._state_info_provider.answering_player.nickname, self._state_info_provider.current_melody.points // 2
 		)
-		self._change_state_if_not_accept()
+		self._change_state_if_not_accept(self._state_info_provider.answering_player.nickname)
 
 	def accept_answer(self) -> None:
 		player = self._state_info_provider.answering_player
@@ -275,7 +275,7 @@ class AnswerCheckState(GameStateABC):
 	def reject_answer(self) -> None:
 		self._players_provider.remove_points(self._state_info_provider.answering_player.nickname,
 											 self._state_info_provider.current_melody.points)
-		self._change_state_if_not_accept()
+		self._change_state_if_not_accept(self._state_info_provider.choosing_player.nickname)
 
 	def _change_state_(self):
 		if self._game.not_guessed_melodies_count <= 0:
